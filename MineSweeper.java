@@ -6,11 +6,14 @@ class MineSweeper{
 	public static void main(String[] args) {
 		boolean gameOver = false;
 		int[][] grid = new int[8][8];
+		int[][] gridUncovered  = new int[8][8];
 		int[] ioUser = new int[2];
 		initializeFullGrid(grid);
+		drawFullGrid(grid, gridUncovered);
 		while(!gameOver){
 			takeInput(ioUser);
-			gameOver = revealGridCell(ioUser[0],ioUser[1],grid);
+			gameOver = revealGridCell(ioUser[0],ioUser[1],grid,gridUncovered);
+			drawFullGrid(grid, gridUncovered);
 		}
 	}
 
@@ -28,7 +31,6 @@ class MineSweeper{
 				int y = randomEights.nextInt(7) + 0;
 				if(grid[x][y] != -1){
 					grid[x][y] = -1;
-					System.out.println("x: " + x + "   y: " + y);
 					validPlacement = true;
 				}
 			}
@@ -39,7 +41,13 @@ class MineSweeper{
 
 
 	// TEST IMPLEMENTATION ONLY
-	public static boolean revealGridCell(int row, int col, int[][] grid){
+	public static boolean revealGridCell(int row, int col, int[][] grid, int[][] gridUncovered){
+		//Open Spaces and create the appropriate labelling 
+		if(grid[row][col] == 0){
+			grid[row][col] = 1;
+
+		}
+
 		if(grid[row][col] == -1){
 			System.out.println("GAME OVER");
 			return true;
@@ -48,8 +56,22 @@ class MineSweeper{
 		}
 	}
 
-	public static void drawFullGrid(){
-
+	public static void drawFullGrid(int[][] grid, int[][] revealGridCell){
+		System.out.println("  | 0 1 2 3 4 5 6 7");
+		System.out.println("___________________");
+		for(int i = 0; i < 8; i++){
+			System.out.print(i + " | ");
+			for(int z = 0; z < 8; z++){
+				if(grid[i][z] == 0 && revealGridCell[i][z] == 0) {
+					System.out.print( ". ");
+				} else if(grid[i][z] == 0 && revealGridCell[i][z] == 1) {
+					System.out.print("  ");
+				} else if((grid[i][z] == 0 && revealGridCell[i][z] > 1){
+					System.our.print((revealGridCell[i][z] - 1) + " ");
+				}
+			}
+			System.out.println();
+		}
 	}
 
     /* takes in a domain or range number and insures it is in
