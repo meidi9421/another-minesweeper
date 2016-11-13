@@ -42,11 +42,6 @@ class MineSweeper{
 
 	// TEST IMPLEMENTATION ONLY
 	public static boolean revealGridCell(int row, int col, int[][] grid, int[][] gridUncovered){
-		//Open Spaces and create the appropriate labelling 
-		if(grid[row][col] == 0){
-			grid[row][col] = 1;
-
-		}
 
 		if(grid[row][col] == -1){
 			System.out.println("GAME OVER");
@@ -66,8 +61,8 @@ class MineSweeper{
 					System.out.print( ". ");
 				} else if(grid[i][z] == 0 && revealGridCell[i][z] == 1) {
 					System.out.print("  ");
-				} else if((grid[i][z] == 0 && revealGridCell[i][z] > 1){
-					System.our.print((revealGridCell[i][z] - 1) + " ");
+				} else if(grid[i][z] == 0 && revealGridCell[i][z] > 1){
+					System.out.print((revealGridCell[i][z] - 1) + " ");
 				}
 			}
 			System.out.println();
