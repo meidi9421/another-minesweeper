@@ -39,9 +39,39 @@ class MineSweeper{
 
 	}
 
+	public static void checkSurround (int row, int col, int[][]grid, int[][] gridUncovered){
+		for(int posY = -1; posY < 2; posY++){
+			for(int posX = -1; posX < 2; posX++){
+				try{
+					if(grid[row + posX][col + posY] != -1){
+						gridUncovered[row + posX][col + posY] = bombSurround(row + posX, col + posY, grid);
+					}
+				} catch(ArrayIndexOutOfBoundsException e){
+					continue;
+				}
+			}
+		}
+	}
+
+	public static int bombSurround (int row, int col, int[][]grid){
+		int bombsAround = 1;
+		for(int posY = -1; posY < 2; posY++){
+			for(int posX = -1; posX < 2; posX++){
+			try{
+				if(grid[row + posX][col + posY] == -1){
+					bombsAround++;
+				}
+			} catch(ArrayIndexOutOfBoundsException e){
+				continue;
+				}
+			}
+		}
+		return bombsAround;
+	}
 
 	// TEST IMPLEMENTATION ONLY
 	public static boolean revealGridCell(int row, int col, int[][] grid, int[][] gridUncovered){
+		checkSurround(row, col, grid, gridUncovered);
 
 		if(grid[row][col] == -1){
 			System.out.println("GAME OVER");
@@ -57,8 +87,13 @@ class MineSweeper{
 		for(int i = 0; i < 8; i++){
 			System.out.print(i + " | ");
 			for(int z = 0; z < 8; z++){
-				if(grid[i][z] == 0 && revealGridCell[i][z] == 0) {
-					System.out.print( ". ");
+				if( revealGridCell[i][z] == 0) {
+					if(grid[i][z] == -1){
+						System.out.print("X ");
+					}else {
+						System.out.print( ". ");
+					}
+
 				} else if(grid[i][z] == 0 && revealGridCell[i][z] == 1) {
 					System.out.print("  ");
 				} else if(grid[i][z] == 0 && revealGridCell[i][z] > 1){
