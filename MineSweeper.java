@@ -72,7 +72,6 @@ class MineSweeper{
 	// TEST IMPLEMENTATION ONLY
 	public static boolean revealGridCell(int row, int col, int[][] grid, int[][] gridUncovered){
 		checkSurround(row, col, grid, gridUncovered);
-
 		if(grid[row][col] == -1){
 			System.out.println("GAME OVER");
 			return true;
@@ -122,18 +121,29 @@ class MineSweeper{
 	public static void takeInput(int[] ioCoords){
 		Boolean properInput = false;
 		while(!properInput){
-			Scanner userIn = new Scanner(System.in);
+
 			System.out.print("Select a cell. Row value (a digit between 0 and 7): ");
-			int rowVal = userIn.nextInt();
+			int rowVal = checkValidInput();
 			System.out.print("Select a cell. Column value (a digit between 0 and 7): ");
-			int colVal = userIn.nextInt();
+			int colVal = checkValidInput();
 			if(checkDomainRange(rowVal) && checkDomainRange(colVal)){
 				ioCoords[0] = rowVal;
 				ioCoords[1] = colVal;
 				properInput = true;
+			} else {
+				System.out.println("One of those is invalid an invalid value, Please try again.");
 			}
 		}
+	}
 
-
+	public static int checkValidInput(){
+		Scanner userIn = new Scanner(System.in);
+		int returnVal = 0;
+		try{
+			returnVal = userIn.nextInt();
+		} catch(InputMismatchException e){
+			returnVal = -1;
+		}
+		return returnVal;
 	}
 }
