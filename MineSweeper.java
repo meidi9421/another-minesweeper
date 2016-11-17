@@ -4,16 +4,17 @@ import java.lang.Math.*;
 class MineSweeper{
 
 	public static void main(String[] args) {
-		boolean gameOver = false;
+		boolean gameOver = false, gameWon = false;
 		int[][] grid = new int[8][8];
 		int[][] gridUncovered  = new int[8][8];
 		int[] ioUser = new int[2];
 		initializeFullGrid(grid);
-		drawFullGrid(grid, gridUncovered);
-		while(!gameOver){
+		drawFullGrid(grid, gridUncovered, gameOver, gameWon);
+		while(!gameOver && !gameWon){
 			takeInput(ioUser);
 			gameOver = revealGridCell(ioUser[0],ioUser[1],grid,gridUncovered);
-			drawFullGrid(grid, gridUncovered);
+			gameWon = checkGameWon(grid, gridUncovered);
+			drawFullGrid(grid, gridUncovered, gameOver, gameWon);
 		}
 	}
 
@@ -37,6 +38,25 @@ class MineSweeper{
 			while(!validPlacement);
 		}
 
+	}
+
+	public static boolean checkGameWon(int[][] grid, int[][] gridUncovered){
+		int runningTotal = 0;
+		int reqWinTotal = 54; //8 x 8 elements. 10 bombs. 64 - 10 = 54 which means the total cells needed is 54
+		for(int posY = 0; posY < 8; posY++){
+			for(int posX = 0; posX < 8; posX++){
+				if(grid[posX][posY] != -1 && gridUncovered[posX][posY] >= 1){
+					runningTotal++;
+				}
+			}
+		}
+
+		if(runningTotal == reqWinTotal){
+			System.out.println("Congrats! You Won!");
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 	public static void checkSurround (int row, int col, int[][]grid, int[][] gridUncovered){
@@ -69,26 +89,25 @@ class MineSweeper{
 		return bombsAround;
 	}
 
-	// TEST IMPLEMENTATION ONLY
 	public static boolean revealGridCell(int row, int col, int[][] grid, int[][] gridUncovered){
 		checkSurround(row, col, grid, gridUncovered);
 		if(grid[row][col] == -1){
-			System.out.println("GAME OVER");
+			System.out.println("Kaboom! Game Over!");
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public static void drawFullGrid(int[][] grid, int[][] revealGridCell){
+	public static void drawFullGrid(int[][] grid, int[][] revealGridCell, boolean gameOver, boolean gameWon){
 		System.out.println("  | 0 1 2 3 4 5 6 7");
 		System.out.println("___________________");
 		for(int i = 0; i < 8; i++){
 			System.out.print(i + " | ");
 			for(int z = 0; z < 8; z++){
 				if( revealGridCell[i][z] == 0) {
-					if(grid[i][z] == -1){
-						System.out.print("X ");
+					if(grid[i][z] == -1 && (gameOver || gameWon)) {
+						System.out.print("B ");
 					}else {
 						System.out.print( ". ");
 					}
@@ -104,7 +123,9 @@ class MineSweeper{
 	}
 
     /* takes in a domain or range number and insures it is in
-	* the correct range
+	* the correct range. As far as this program is concerned there are
+	* no elements outside 0 - 7: if a number greater/less than that is passed
+	* the method returns false.
 	*/
 	public static boolean checkDomainRange(int domRan){
 		if(domRan < 0 || domRan > 7){
